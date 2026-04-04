@@ -132,11 +132,15 @@ winmm.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Caja.cpp" />
     <ClCompile Include="Frisky.cpp" />
+    <ClCompile Include="hitbox.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Caja.h" />
     <ClInclude Include="Frisky.h" />
+    <ClInclude Include="hitbox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

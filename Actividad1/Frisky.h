@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "raylib.h"
 #include <string>
 
@@ -34,7 +33,7 @@ public:
 		float escala = 1.0f, float rotacion = 0.0f,
 		float vel = 3.0f, bool direccion = true,
 		bool saltando = false, bool subiendo = false,
-		float alturaSalto = 100.0f, float velocidadSalto = 7.0f, float pisoY = 450.0f);
+		float alturaSalto = 150.0f, float velocidadSalto = 7.0f, float pisoY = 600);
 
 
 	//destructor
