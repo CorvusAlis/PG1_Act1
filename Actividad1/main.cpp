@@ -19,6 +19,9 @@ int main() {
     InitWindow(1100, 768, "Actividad 1");
     SetTargetFPS(60);
 
+    //init de audio
+    InitAudioDevice();
+
     int indiceSiguiente = 0;
     bool juegoTerminado = false;
     bool juegoGanado = false;

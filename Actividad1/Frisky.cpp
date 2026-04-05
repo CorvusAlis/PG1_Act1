@@ -19,6 +19,10 @@ Frisky::Frisky(const string& rutaTextura, Vector2 pos, float escala)
     textura = LoadTexture(rutaTextura.c_str());
     SetTextureFilter(textura, TEXTURE_FILTER_POINT);
     hitbox.DebugOn(true);
+
+    //carga de sonidos
+    salto = LoadSound("assets/salto.wav");
+    SetSoundVolume(salto, 0.5f);
 }
 
 Frisky::~Frisky()
@@ -81,6 +85,7 @@ void Frisky::Saltar() {
     if (!saltando) {
         saltando = true;
         subiendo = true;
+        PlaySound(salto);
     }
 }
 

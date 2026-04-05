@@ -28,6 +28,8 @@ private:
 	float velocidadSalto;
 	float pisoY;
 
+	Sound salto;
+
 	Hitbox hitbox;
 
 public:
