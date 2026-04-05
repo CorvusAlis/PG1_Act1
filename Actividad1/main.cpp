@@ -9,16 +9,19 @@
 
 vector<Caja> CrearCajas(int cantidad);
 vector<int> GenerarNumerosUnicos(int cantidad);
+void DibujarMensaje(const char* msj, Color c);
 
 int main() {
-    //init de pantalla
-    InitWindow(1105, 768, "Actividad 1");
+
+    InitWindow(1100, 768, "Actividad 1");
     SetTargetFPS(60);
 
     int indiceSiguiente = 0;
+    bool juegoTerminado = false;
+    bool juegoGanado = false;
+    bool juegoPerdido = false;
 
-    Frisky frisky("assets/frisky.png", { 50, 600 }, 2.4f);
-    //Caja cajaTest("assets/crate.png", { 400, 600 }, 2.0f, 1);
+    Frisky frisky("assets/frisky.png", { 500, 600 }, 2.4f);
     vector<Caja> cajas = CrearCajas(10);
     vector<Caja*> orden;   //vector de puntero de cajas
 
@@ -37,26 +40,59 @@ int main() {
     {
         ClearBackground(DARKBLUE);
 
-        frisky.ActualizarPos();   //control del movimiento en cada frame
+        //ACTUALIZACION POSICIONES Y HITBOX
+        frisky.ActualizarPos();
 
+        for (int i = 0; i < cajas.size(); i++)
+        {
+            cajas[i].Actualizar();
+        }
+
+        //COLISIONES
+        for (int i = 0; i < cajas.size(); i++)
+        {
+            Caja& caja = cajas[i];
+
+            //bool colision = frisky.GetHitbox().Intersectan(caja.GetHitbox());
+
+            //trigger colision
+            if (caja.EstaActiva() && caja.CheckColisionTrigger(frisky.GetHitbox()))
+            {
+                //check siguiente orden
+                if (&caja == orden[indiceSiguiente])
+                {
+                    caja.SetColor(GREEN);
+                    caja.Desactivar();
+                    indiceSiguiente++;
+
+                    if (indiceSiguiente >= orden.size())
+                    {
+                        juegoTerminado = true;
+                        juegoGanado = true;
+                        frisky.SetActivo(false);    //el jugador no se puede mover
+                    }
+                }
+                else
+                {
+                    if (caja.EstaActiva())
+                        caja.SetColor(RED);
+                }
+            }
+        }
+
+        //RENDER
         BeginDrawing();
 
-        //for (int i = 0; i < orden.size(); i++)
-        //{
-        //    DrawText(
-        //        TextFormat("%d", orden[i]->GetNumero()),
-        //        50,
-        //        50 + i * 20,
-        //        20,
-        //        YELLOW
-        //    );
-        //}
-
         frisky.Dibujar();
-        //cajaTest.Dibujar();
+
         for (int i = 0; i < cajas.size(); i++)
         {
             cajas[i].Dibujar(); //las cajas se dibujan desordenadas - el vector de punteros a estas cajas es el que se ordena
+        }
+
+        if (juegoTerminado && juegoGanado) {
+            DibujarMensaje("GANASTE!", GREEN);
+            frisky.SetPosicion({ 500, 600 });
         }
 
         EndDrawing();
@@ -110,4 +146,17 @@ vector<int> GenerarNumerosUnicos(int cantidad)
     numeros.resize(cantidad);
 
     return numeros;
+}
+
+//Pantalla de victoria / derrota
+
+void DibujarMensaje(const char* msj, Color c) {
+
+        int fontSize = 40;
+        int textWidth = MeasureText(msj, fontSize);
+
+        int x = (GetScreenWidth() / 2) - (textWidth / 2);
+        int y = 250;
+
+        DrawText(msj, x, y, fontSize, c);
 }

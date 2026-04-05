@@ -11,14 +11,15 @@ class Frisky {
 private:
 
 
-	Texture2D textura; //imagen que se va a mostrar
+	Texture2D textura;
 	float escala;
 	float rotacion;
-	bool direccion; //para donde mira: true = derecha - false = izquierda
+	bool direccion;
 
 	//atributos para control de movimiento
 	Vector2 posicion;
 	float velocidad;
+	bool activo;
 
 	//atributos para controlar el salto
 	bool saltando;
@@ -37,9 +38,10 @@ public:
 	//destructor
 	~Frisky();
 
-	void Dibujar();	//render de la imagen
+	void Dibujar();
 
 	void Mover(float x, float y);
+	void SetActivo(bool estado);
 
 	//trabajan en conjunto para 1) ver si esta saltando 2) saltar propiamente
 	void Salto();
@@ -48,8 +50,8 @@ public:
 	void SetPosicion(Vector2 pos);
 
 	//controlador principal de movimiento
-	//movimiento con flecjhas derecha e izquierda - salto con barra de espacio - reiinicio de posicion con R
 	void ActualizarPos();
 
-	Vector2 GetPosicion() const; //devuelve la posicion actual de la imagen
+	Vector2 GetPosicion() const;
+	Hitbox GetHitbox() const;
 };

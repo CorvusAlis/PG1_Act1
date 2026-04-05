@@ -4,6 +4,7 @@ using namespace std;
 
 Frisky::Frisky(const string& rutaTextura, Vector2 pos, float escala)
     : posicion(pos),
+    activo(true),
     escala(escala),
     rotacion(0.0f),
     velocidad(5.0f),
@@ -12,11 +13,12 @@ Frisky::Frisky(const string& rutaTextura, Vector2 pos, float escala)
     subiendo(false),
     alturaSalto(150.0f),
     velocidadSalto(7.0f),
-    pisoY(pos.y), // importante: se adapta al spawn
+    pisoY(pos.y),
     hitbox(32 * escala, 32 * escala)
 {
     textura = LoadTexture(rutaTextura.c_str());
     SetTextureFilter(textura, TEXTURE_FILTER_POINT);
+    hitbox.DebugOn(true);
 }
 
 Frisky::~Frisky()
@@ -24,9 +26,10 @@ Frisky::~Frisky()
     UnloadTexture(textura);
 }
 
-//render de Frisky 
 void Frisky::Dibujar()
 {
+    hitbox.Sincro(posicion);
+
     //dibuja todo el ancho y alto de la imagen "textura" (el sprite) y lo renderiza desde el pixel 0,0
     //crea un cuadrado con el tamaño del sprite
     Rectangle frisky = { 0, 0, (float)textura.width, (float)textura.height };
@@ -41,6 +44,7 @@ void Frisky::Dibujar()
 
     //con WHITE en Color se muestra el color original de la imagen
     DrawTexturePro(textura, frisky, dest, origen, rotacion, WHITE);
+    hitbox.Draw();
 }
 
 void Frisky::Mover(float x, float y)
@@ -51,11 +55,14 @@ void Frisky::Mover(float x, float y)
 
 void Frisky::ActualizarPos() {
 
-    //salto con barra espaciadora
-    if (IsKeyPressed(KEY_SPACE) && !saltando) Saltar(); //trigger del salto
-    Salto();    //accion efectiva del salto
+    if (!activo) {
+        saltando = false;
+        return;
+    }
 
-    //movimiento con las flechas del teclado
+    if (IsKeyPressed(KEY_SPACE) && !saltando) Saltar();
+    Salto();
+
     if (IsKeyDown(KEY_RIGHT)) {
         Mover(velocidad, 0);
         direccion = true;
@@ -79,7 +86,7 @@ void Frisky::Saltar() {
 
 void Frisky::Salto() {
 
-    if (!saltando) return;  //si no esta saltando, vuelve
+    if (!saltando) return;
 
     if (saltando) {
         if (subiendo) {
@@ -87,19 +94,16 @@ void Frisky::Salto() {
             //velocidad del salto - que tantos pixeles "sube" por unidad de tiempo
             posicion.y -= velocidadSalto;
 
-            //pisoY - alturaSalto = controlo la "altura" del salto - con los valores fijos actuales "salta" hasta y=420
             if (posicion.y <= pisoY - alturaSalto)
-                subiendo = false;   //si llego al limite indicado por la altura del salto, termino de subir
+                subiendo = false;
         }
 
         else {
-            //si ya llego al limite, subiendo = false (cambia el control del segundo if)
-            //ahora se suma la posicion actual y la velocidad para moverlo hacia abajo
             posicion.y += velocidadSalto;
 
-            if (posicion.y >= pisoY) { //es decir, si ya llego al piso
-                posicion.y = pisoY; //evita que el Frisky se hunda en el piso - el final del salto lo coloca en y = 500 sin importar la suma de velocidadSalto (basicamente es un control de colision con el piso)
-                saltando = false;   //ya no esta saltando, puede volver a saltar
+            if (posicion.y >= pisoY) {
+                posicion.y = pisoY; 
+                saltando = false;
             }
         }
     }
@@ -110,7 +114,16 @@ void Frisky::SetPosicion(Vector2 pos)
     posicion = pos;
 }
 
+void Frisky::SetActivo(bool estado)
+{
+    activo = estado;
+}
+
 Vector2 Frisky::GetPosicion() const
 {
     return posicion;
+}
+
+Hitbox Frisky::GetHitbox() const {
+    return hitbox;
 }

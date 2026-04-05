@@ -4,10 +4,14 @@ Caja::Caja(const string rutaTextura, Vector2 pos, float esc, int num)
     : posicion(pos),
     escala(esc),
     numero(num),
-    hitbox(32 * esc, 32 * esc)
+    hitbox(32 * esc, 32 * esc),
+    colisionada(false),
+    activo(true),
+    colorNumero(WHITE)
 {
     textura = LoadTexture(rutaTextura.c_str());
     SetTextureFilter(textura, TEXTURE_FILTER_POINT);
+    hitbox.DebugOn(true);
 }
 
 Caja::~Caja()
@@ -17,8 +21,6 @@ Caja::~Caja()
 
 void Caja::Dibujar()
 {
-    hitbox.Sincro(posicion);
-
     Rectangle source = { 0, 0, (float)textura.width, (float)textura.height };
     Rectangle dest = { posicion.x, posicion.y, textura.width * escala, textura.height * escala };
     Vector2 origen = { 0, 0 };
@@ -36,13 +38,19 @@ void Caja::Dibujar()
     float textX = posicion.x + (dest.width / 2) - (textWidth / 2);
     float textY = posicion.y + (dest.height / 2) - (fontSize / 2);
 
-    DrawText(texto.c_str(), (int)textX, (int)textY, fontSize, WHITE);
+    DrawText(texto.c_str(), (int)textX, (int)textY, fontSize, colorNumero);
 
+    hitbox.Draw();
 }
 
 void Caja::SetPosicion(Vector2 pos)
 {
     posicion = pos;
+}
+
+void Caja::Actualizar()
+{
+    hitbox.Sincro(posicion);
 }
 
 Vector2 Caja::GetPosicion() const
@@ -59,3 +67,20 @@ const Hitbox& Caja::GetHitbox() const
 {
     return hitbox;
 }
+
+bool Caja::CheckColisionTrigger(const Hitbox& otra)
+{
+    bool colision = hitbox.Intersectan(otra);
+
+    bool trigger = colision && !colisionada;
+
+    colisionada = colision;
+
+    return trigger;
+}
+
+bool Caja::EstaActiva() const { return activo; }
+
+void Caja::Desactivar() { activo = false; }
+
+void Caja::SetColor(Color c) { colorNumero = c; }
