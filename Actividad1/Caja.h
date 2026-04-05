@@ -2,6 +2,8 @@
 #include "raylib.h"
 #include <string>
 
+#include "hitbox.h"
+
 using namespace std;
 
 class Caja {
@@ -22,5 +24,6 @@ public:
 	void SetPosicion(Vector2 pos);
 
 	Vector2 GetPosicion() const;
+	int GetNumero() const;
 
 };

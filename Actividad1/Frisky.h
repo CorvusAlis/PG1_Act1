@@ -2,6 +2,8 @@
 #include "raylib.h"
 #include <string>
 
+//#include "hitbox.h"
+
 using namespace std;
 
 class Frisky {
