@@ -31,7 +31,7 @@ bool Hitbox::Intersectan(const Hitbox& objeto) const
     return CheckCollisionRecs(hbox, objeto.hbox);   //detecta la colision entre el objeto que tiene la hitbox, y la hitbox de otro objeto
 }
 
-//colisiones - no usadas en este proyecto
+//colisiones
 
 bool Hitbox::ColisionaArriba(const Hitbox& objeto) const {
 

@@ -2,21 +2,21 @@
 
 using namespace std;
 
-Frisky::Frisky(const string rutaTextura, Vector2 pos, float escala, float rotacion, float vel, bool direccion, bool saltando, bool subiendo, float alturaSalto, float velocidadSalto, float pisoY)
+Frisky::Frisky(const string& rutaTextura, Vector2 pos, float escala)
     : posicion(pos),
     escala(escala),
-    rotacion(rotacion),
-    velocidad(vel),
-    direccion(direccion),
-    saltando(saltando),
-    subiendo(subiendo),
-    alturaSalto(alturaSalto),
-    velocidadSalto(velocidadSalto),    //que "tan rapido" sube o baja - cuantos pixeles incrementa o decrementa en Y por unidad de tiempo
-    pisoY(pisoY)
+    rotacion(0.0f),
+    velocidad(5.0f),
+    direccion(true),
+    saltando(false),
+    subiendo(false),
+    alturaSalto(150.0f),
+    velocidadSalto(7.0f),
+    pisoY(pos.y), // importante: se adapta al spawn
+    hitbox(32 * escala, 32 * escala)
 {
-    //carga de ruta de textura y filtro
     textura = LoadTexture(rutaTextura.c_str());
-    SetTextureFilter(textura, TEXTURE_FILTER_POINT);    //este filtro para pixelart
+    SetTextureFilter(textura, TEXTURE_FILTER_POINT);
 }
 
 Frisky::~Frisky()

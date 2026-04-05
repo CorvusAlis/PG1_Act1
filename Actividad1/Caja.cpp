@@ -3,7 +3,8 @@
 Caja::Caja(const string rutaTextura, Vector2 pos, float esc, int num)
     : posicion(pos),
     escala(esc),
-    numero(num)
+    numero(num),
+    hitbox(32 * esc, 32 * esc)
 {
     textura = LoadTexture(rutaTextura.c_str());
     SetTextureFilter(textura, TEXTURE_FILTER_POINT);
@@ -16,6 +17,8 @@ Caja::~Caja()
 
 void Caja::Dibujar()
 {
+    hitbox.Sincro(posicion);
+
     Rectangle source = { 0, 0, (float)textura.width, (float)textura.height };
     Rectangle dest = { posicion.x, posicion.y, textura.width * escala, textura.height * escala };
     Vector2 origen = { 0, 0 };
@@ -50,4 +53,9 @@ Vector2 Caja::GetPosicion() const
 int Caja::GetNumero() const
 {
     return numero;
+}
+
+const Hitbox& Caja::GetHitbox() const
+{
+    return hitbox;
 }

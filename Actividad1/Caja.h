@@ -15,6 +15,8 @@ private:
 
 	int numero;	//numero generado aleatoriamente
 
+	Hitbox hitbox;
+
 public:
 	Caja(const string rutaTextura, Vector2 pos, float esc, int num);
 	~Caja();
@@ -25,5 +27,6 @@ public:
 
 	Vector2 GetPosicion() const;
 	int GetNumero() const;
+	const Hitbox& GetHitbox() const;
 
 };

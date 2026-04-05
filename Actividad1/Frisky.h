@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include <string>
 
-//#include "hitbox.h"
+#include "hitbox.h"
 
 using namespace std;
 
@@ -27,16 +27,12 @@ private:
 	float velocidadSalto;
 	float pisoY;
 
+	Hitbox hitbox;
 
 public:
 
 	//constructor
-	Frisky(const string rutaTextura, Vector2 pos,
-		float escala = 1.0f, float rotacion = 0.0f,
-		float vel = 3.0f, bool direccion = true,
-		bool saltando = false, bool subiendo = false,
-		float alturaSalto = 150.0f, float velocidadSalto = 7.0f, float pisoY = 600);
-
+	Frisky(const string& rutaTextura, Vector2 pos, float escala = 1.0f);
 
 	//destructor
 	~Frisky();

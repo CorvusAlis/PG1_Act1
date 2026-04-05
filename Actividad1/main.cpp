@@ -17,7 +17,7 @@ int main() {
 
     int indiceSiguiente = 0;
 
-    Frisky frisky("assets/frisky.png", { 50, 600 }, 2.4f, 0.0f, 5.0f, true);
+    Frisky frisky("assets/frisky.png", { 50, 600 }, 2.4f);
     //Caja cajaTest("assets/crate.png", { 400, 600 }, 2.0f, 1);
     vector<Caja> cajas = CrearCajas(10);
     vector<Caja*> orden;   //vector de puntero de cajas
@@ -78,7 +78,7 @@ vector<Caja> CrearCajas(int cantidad)
 
     for (int i = 0; i < cantidad; i++)
     {
-        Vector2 pos = { 75.0f + i * 100.0f, 440.0f }; //distribución horizontal
+        Vector2 pos = { 75.0f + i * 100.0f, 400.0f }; //distribución horizontal
 
         //uso de emplace_back para creacion de objetos complejos en vector - evita errores de creacion temporal de objetos presente en push_back
         cajas.
