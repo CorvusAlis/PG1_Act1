@@ -27,6 +27,9 @@
     <ClCompile Include="hitbox.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="Reloj.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Frisky.h">
@@ -36,6 +39,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="hitbox.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Reloj.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

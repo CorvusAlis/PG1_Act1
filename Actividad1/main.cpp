@@ -6,10 +6,13 @@
 
 #include "Frisky.h"
 #include "Caja.h"
+#include "Reloj.h"
 
+//funciones auxiliares
 vector<Caja> CrearCajas(int cantidad);
 vector<int> GenerarNumerosUnicos(int cantidad);
 void DibujarMensaje(const char* msj, Color c);
+void OrdenarVisualmente(vector<Caja*>& orden);
 
 int main() {
 
@@ -19,11 +22,11 @@ int main() {
     int indiceSiguiente = 0;
     bool juegoTerminado = false;
     bool juegoGanado = false;
-    bool juegoPerdido = false;
 
     Frisky frisky("assets/frisky.png", { 500, 600 }, 2.4f);
     vector<Caja> cajas = CrearCajas(10);
     vector<Caja*> orden;   //vector de puntero de cajas
+    Reloj reloj(60);
 
     for (int i = 0; i < cajas.size(); i++)
     {
@@ -38,61 +41,77 @@ int main() {
 
     while (!WindowShouldClose())
     {
-        ClearBackground(DARKBLUE);
-
-        //ACTUALIZACION POSICIONES Y HITBOX
-        frisky.ActualizarPos();
+        //ACTUALIZACIONES
+        if (!juegoTerminado)
+        {
+            frisky.ActualizarPos();
+            reloj.Actualizar();
+        }
 
         for (int i = 0; i < cajas.size(); i++)
         {
             cajas[i].Actualizar();
         }
 
-        //COLISIONES
-        for (int i = 0; i < cajas.size(); i++)
-        {
-            Caja& caja = cajas[i];
-
-            //bool colision = frisky.GetHitbox().Intersectan(caja.GetHitbox());
-
-            //trigger colision
-            if (caja.EstaActiva() && caja.CheckColisionTrigger(frisky.GetHitbox()))
+        //COLISIONES Y ESTADO DE JUEGO
+        if (!juegoTerminado) {
+            for (int i = 0; i < cajas.size(); i++)
             {
-                //check siguiente orden
-                if (&caja == orden[indiceSiguiente])
-                {
-                    caja.SetColor(GREEN);
-                    caja.Desactivar();
-                    indiceSiguiente++;
+                Caja& caja = cajas[i];
 
-                    if (indiceSiguiente >= orden.size())
-                    {
-                        juegoTerminado = true;
-                        juegoGanado = true;
-                        frisky.SetActivo(false);    //el jugador no se puede mover
-                    }
-                }
-                else
+                if (caja.EstaActiva() && caja.CheckColisionTrigger(frisky.GetHitbox()))
                 {
-                    if (caja.EstaActiva())
+                    if (&caja == orden[indiceSiguiente])
+                    {
+                        caja.SetColor(GREEN);
+                        caja.Desactivar();
+                        indiceSiguiente++;
+
+                        if (indiceSiguiente >= orden.size())
+                        {
+                            juegoTerminado = true;
+                            juegoGanado = true;
+                            frisky.SetActivo(false);
+                            OrdenarVisualmente(orden);
+                        }
+                    }
+                    else
+                    {
                         caja.SetColor(RED);
+                        reloj.RestarTiempo(10.0f);
+                    }
                 }
             }
         }
 
+        //RESOLUCION DE ESTADO FINAL
+        if (!juegoTerminado && reloj.TiempoAgotado())
+        {
+            juegoTerminado = true;
+            juegoGanado = false;
+            frisky.SetActivo(false);
+            frisky.SetPosicion({ 500, 600 });
+            OrdenarVisualmente(orden);
+        }
+
         //RENDER
         BeginDrawing();
+        ClearBackground(DARKBLUE);
 
         frisky.Dibujar();
+        reloj.Dibujar(20, 20);
 
         for (int i = 0; i < cajas.size(); i++)
         {
             cajas[i].Dibujar(); //las cajas se dibujan desordenadas - el vector de punteros a estas cajas es el que se ordena
         }
 
-        if (juegoTerminado && juegoGanado) {
-            DibujarMensaje("GANASTE!", GREEN);
-            frisky.SetPosicion({ 500, 600 });
+        if (juegoTerminado)
+        {
+            if (juegoGanado)
+                DibujarMensaje("GANASTE!", GREEN);
+            else
+                DibujarMensaje("PERDISTE!", RED);
         }
 
         EndDrawing();
@@ -159,4 +178,14 @@ void DibujarMensaje(const char* msj, Color c) {
         int y = 250;
 
         DrawText(msj, x, y, fontSize, c);
+}
+
+//Ordenamiento de cajas
+void OrdenarVisualmente(vector<Caja*>& orden)
+{
+    for (int i = 0; i < orden.size(); i++)
+    {
+        Vector2 nuevaPos = { 75.0f + i * 100.0f, 400.0f };
+        orden[i]->SetPosicion(nuevaPos);
+    }
 }
